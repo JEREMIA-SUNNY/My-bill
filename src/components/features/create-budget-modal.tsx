@@ -122,18 +122,18 @@ export function CreateBudgetModal({ trigger, onSuccess }: CreateBudgetModalProps
       description="Set a spending limit for a category this month."
       trigger={trigger}
     >
-      <div className="p-4">
+      <div className="p-3 md:p-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
             <FormField
               control={form.control}
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Category</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                     </FormControl>
@@ -159,13 +159,13 @@ export function CreateBudgetModal({ trigger, onSuccess }: CreateBudgetModalProps
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount Limit</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Amount Limit</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-muted-foreground">$</span>
+                      <span className="absolute left-3 top-2.5 text-sm md:text-base text-muted-foreground">$</span>
                       <Input 
                         placeholder="0.00" 
-                        className="pl-7" 
+                        className="pl-7 text-sm md:text-base h-10 md:h-11" 
                         type="number" 
                         step="0.01"
                         {...field} 
@@ -177,7 +177,7 @@ export function CreateBudgetModal({ trigger, onSuccess }: CreateBudgetModalProps
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={submitting}>
+            <Button type="submit" className="w-full h-10 md:h-11 text-sm md:text-base" disabled={submitting}>
               {submitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -119,19 +119,19 @@ export function AnalyticsView() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="categories">Categories</TabsTrigger>
-          <TabsTrigger value="calendar">Calendar</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview" className="text-xs md:text-sm">Overview</TabsTrigger>
+          <TabsTrigger value="categories" className="text-xs md:text-sm">Categories</TabsTrigger>
+          <TabsTrigger value="calendar" className="text-xs md:text-sm">Calendar</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle>Income vs Expense (Last 6 Months)</CardTitle>
+              <CardTitle className="text-base md:text-lg">Income vs Expense (Last 6 Months)</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
-              <div className="h-[350px] w-full">
+              <div className="h-[300px] md:h-[350px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={monthlyData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
@@ -164,13 +164,13 @@ export function AnalyticsView() {
         </TabsContent>
 
         <TabsContent value="categories" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
             <Card className="glass-card">
               <CardHeader>
-                <CardTitle>Expense Breakdown (This Month)</CardTitle>
+                <CardTitle className="text-base md:text-lg">Expense Breakdown (This Month)</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-[350px] w-full">
+                <div className="h-[300px] md:h-[350px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
@@ -199,7 +199,7 @@ export function AnalyticsView() {
 
             <Card className="glass-card">
               <CardHeader>
-                <CardTitle>Top Categories</CardTitle>
+                <CardTitle className="text-base md:text-lg">Top Categories</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">

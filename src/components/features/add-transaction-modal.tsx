@@ -163,38 +163,38 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
         )
       }
     >
-      <div className="space-y-4 py-4">
-        <div className="flex items-center justify-center space-x-4 mb-6">
+      <div className="space-y-3 md:space-y-4 py-3 md:py-4">
+        <div className="flex items-center justify-center space-x-2 md:space-x-4 mb-4 md:mb-6">
           <Button
             variant={type === "expense" ? "default" : "outline"}
             onClick={() => setType("expense")}
-            className="w-32"
+            className="w-28 md:w-32 text-sm md:text-base h-9 md:h-10"
           >
             Expense
           </Button>
           <Button
             variant={type === "income" ? "default" : "outline"}
             onClick={() => setType("income")}
-            className="w-32"
+            className="w-28 md:w-32 text-sm md:text-base h-9 md:h-10"
           >
             Income
           </Button>
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 md:space-y-4">
             <FormField
               control={form.control}
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Amount</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-muted-foreground">$</span>
+                      <span className="absolute left-3 top-2.5 text-sm md:text-base text-muted-foreground">$</span>
                       <Input 
                         placeholder="0.00" 
-                        className="pl-7 text-lg font-semibold" 
+                        className="pl-7 text-base md:text-lg font-semibold h-10 md:h-11" 
                         type="number" 
                         step="0.01"
                         {...field} 
@@ -206,16 +206,16 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               <FormField
                 control={form.control}
                 name="categoryId"
                 render={({ field }) => (
-                  <FormItem className={type === "income" ? "col-span-2" : ""}>
-                    <FormLabel>Category</FormLabel>
+                  <FormItem className={type === "income" ? "md:col-span-2" : ""}>
+                    <FormLabel className="text-sm md:text-base">Category</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>
@@ -247,10 +247,10 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
                   name="paymentMethodId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Payment</FormLabel>
+                      <FormLabel className="text-sm md:text-base">Payment</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="text-sm md:text-base h-10 md:h-11">
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
                         </FormControl>
@@ -278,14 +278,14 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "w-full pl-3 text-left font-normal",
+                            "w-full pl-3 text-left font-normal h-10 md:h-11 text-sm md:text-base",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -320,11 +320,11 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
               name="note"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Note</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Note</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="What was this for?"
-                      className="resize-none"
+                      className="resize-none text-sm md:text-base min-h-[80px]"
                       {...field}
                     />
                   </FormControl>
@@ -335,8 +335,8 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
 
             <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
               <div className="space-y-0.5">
-                <FormLabel>Recurring</FormLabel>
-                <div className="text-[0.8rem] text-muted-foreground">
+                <FormLabel className="text-sm md:text-base">Recurring</FormLabel>
+                <div className="text-[0.7rem] md:text-[0.8rem] text-muted-foreground">
                   Repeat this transaction monthly
                 </div>
               </div>
@@ -354,7 +354,7 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
               </FormControl>
             </div>
 
-            <Button type="submit" className="w-full h-12 text-lg" disabled={submitting}>
+            <Button type="submit" className="w-full h-11 md:h-12 text-base md:text-lg" disabled={submitting}>
               {submitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

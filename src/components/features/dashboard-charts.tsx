@@ -16,19 +16,19 @@ interface DashboardChartsProps {
 export function DashboardCharts({ transactions, summary, monthlyData, budgetData }: DashboardChartsProps) {
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+    <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="col-span-4"
+        className="lg:col-span-4"
       >
         <Card className="glass h-full">
           <CardHeader>
-            <CardTitle>Income vs Expense</CardTitle>
+            <CardTitle className="text-base md:text-lg">Income vs Expense</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
-            <div className="h-[300px] w-full">
+            <div className="h-[250px] md:h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={monthlyData}>
                   <defs>
@@ -84,22 +84,22 @@ export function DashboardCharts({ transactions, summary, monthlyData, budgetData
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="col-span-3"
+        className="lg:col-span-3"
       >
         <Card className="glass h-full">
           <CardHeader>
-            <CardTitle>Monthly Budget</CardTitle>
+            <CardTitle className="text-base md:text-lg">Monthly Budget</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] w-full flex items-center justify-center relative">
+            <div className="h-[250px] md:h-[300px] w-full flex items-center justify-center relative">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={budgetData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={80}
-                    outerRadius={100}
+                    innerRadius={60}
+                    outerRadius={80}
                     paddingAngle={5}
                     dataKey="value"
                     stroke="none"
@@ -116,8 +116,8 @@ export function DashboardCharts({ transactions, summary, monthlyData, budgetData
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-bold">{formatCurrency(summary.expenses)}</span>
-                <span className="text-sm text-muted-foreground">Spent</span>
+                <span className="text-xl md:text-2xl font-bold">{formatCurrency(summary.expenses)}</span>
+                <span className="text-xs md:text-sm text-muted-foreground">Spent</span>
               </div>
             </div>
           </CardContent>

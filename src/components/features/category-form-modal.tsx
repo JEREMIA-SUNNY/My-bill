@@ -124,17 +124,17 @@ export function CategoryFormModal({ trigger, category, onSuccess }: CategoryForm
       description="Customize your category details"
       trigger={trigger}
     >
-      <div className="p-4">
+      <div className="p-2 md:p-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 md:space-y-6">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Groceries" {...field} />
+                    <Input placeholder="e.g. Groceries" className="text-sm md:text-base" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -146,10 +146,10 @@ export function CategoryFormModal({ trigger, category, onSuccess }: CategoryForm
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Type</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="text-sm md:text-base">
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
                     </FormControl>
@@ -168,20 +168,20 @@ export function CategoryFormModal({ trigger, category, onSuccess }: CategoryForm
               name="color"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Color</FormLabel>
                   <FormControl>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2 md:gap-3">
                       {CATEGORY_COLORS.map((color) => (
                         <div
                           key={color}
                           className={cn(
-                            "h-8 w-8 rounded-full cursor-pointer transition-transform hover:scale-110 flex items-center justify-center",
+                            "h-7 w-7 md:h-8 md:w-8 rounded-full cursor-pointer transition-transform hover:scale-110 flex items-center justify-center",
                             field.value === color ? "ring-2 ring-offset-2 ring-primary" : ""
                           )}
                           style={{ backgroundColor: color }}
                           onClick={() => field.onChange(color)}
                         >
-                          {field.value === color && <Check className="h-4 w-4 text-white" />}
+                          {field.value === color && <Check className="h-3 w-3 md:h-4 md:w-4 text-white" />}
                         </div>
                       ))}
                     </div>
@@ -196,19 +196,19 @@ export function CategoryFormModal({ trigger, category, onSuccess }: CategoryForm
               name="icon"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Icon</FormLabel>
+                  <FormLabel className="text-sm md:text-base">Icon</FormLabel>
                   <FormControl>
-                    <div className="grid grid-cols-5 gap-3 max-h-[200px] overflow-y-auto p-1">
+                    <div className="grid grid-cols-4 md:grid-cols-5 gap-2 md:gap-3 max-h-[120px] md:max-h-[200px] overflow-y-auto p-1 border rounded-md">
                       {CATEGORY_ICONS.map(({ name, icon: Icon }) => (
                         <div
                           key={name}
                           className={cn(
-                            "flex flex-col items-center justify-center p-2 rounded-lg cursor-pointer border hover:bg-accent transition-colors",
+                            "flex flex-col items-center justify-center p-1.5 md:p-2 rounded-lg cursor-pointer border hover:bg-accent transition-colors",
                             field.value === name ? "border-primary bg-primary/10" : "border-transparent"
                           )}
                           onClick={() => field.onChange(name)}
                         >
-                          <Icon className="h-6 w-6 mb-1" />
+                          <Icon className="h-5 w-5 md:h-6 md:w-6 mb-0.5 md:mb-1" />
                         </div>
                       ))}
                     </div>
@@ -218,7 +218,7 @@ export function CategoryFormModal({ trigger, category, onSuccess }: CategoryForm
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={submitting}>
+            <Button type="submit" className="w-full h-10 md:h-11 text-sm md:text-base" disabled={submitting}>
               {submitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

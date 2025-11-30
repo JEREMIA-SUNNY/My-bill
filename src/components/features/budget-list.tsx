@@ -88,12 +88,13 @@ export function BudgetList() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Monthly Budgets</h2>
+      <div className="flex justify-between items-center gap-2">
+        <h2 className="text-xl md:text-2xl font-bold">Monthly Budgets</h2>
         <CreateBudgetModal 
           trigger={
-            <Button>
-              <Plus className="mr-2 h-4 w-4" /> Set Budget
+            <Button size="sm" className="md:h-10">
+              <Plus className="h-4 w-4 md:mr-2" />
+              <span className="hidden sm:inline">Set Budget</span>
             </Button>
           }
           onSuccess={fetchData}
@@ -124,7 +125,7 @@ export function BudgetList() {
                     >
                       <Icon className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-base font-medium">
+                    <CardTitle className="text-sm md:text-base font-medium">
                       {budget.category.name}
                     </CardTitle>
                   </div>
@@ -134,7 +135,7 @@ export function BudgetList() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-xs md:text-sm">
                       <span className="text-muted-foreground">Spent</span>
                       <span className={cn("font-medium", isOverBudget ? "text-destructive" : "")}>
                         {formatCurrency(spent)} <span className="text-muted-foreground">/ {formatCurrency(budget.amount)}</span>

@@ -45,21 +45,21 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">Manage your account settings and preferences.</p>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Settings</h1>
+        <p className="text-sm md:text-base text-muted-foreground">Manage your account settings and preferences.</p>
       </div>
 
       <div className="grid gap-6">
         <Card className="glass-card">
           <CardHeader>
-            <CardTitle>Appearance</CardTitle>
-            <CardDescription>Customize how the app looks on your device.</CardDescription>
+            <CardTitle className="text-base md:text-lg">Appearance</CardTitle>
+            <CardDescription className="text-xs md:text-sm">Customize how the app looks on your device.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <Label>Theme</Label>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs md:text-sm text-muted-foreground">
                   Select your preferred theme (Light/Dark)
                 </div>
               </div>
@@ -77,22 +77,22 @@ export default function SettingsPage() {
 
         <Card className="glass-card">
           <CardHeader>
-            <CardTitle>Account</CardTitle>
-            <CardDescription>Manage your account information.</CardDescription>
+            <CardTitle className="text-base md:text-lg">Account</CardTitle>
+            <CardDescription className="text-xs md:text-sm">Manage your account information.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
+            <div className="flex items-center gap-3 md:gap-4">
+              <Avatar className="h-12 w-12 md:h-16 md:w-16">
                 <AvatarImage src={user?.user_metadata?.avatar_url} />
-                <AvatarFallback className="text-lg">
+                <AvatarFallback className="text-base md:text-lg">
                   {user?.email?.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <div>
-                <h3 className="font-medium text-lg">{user?.user_metadata?.full_name || "User"}</h3>
-                <div className="flex items-center text-muted-foreground">
-                  <Mail className="mr-2 h-4 w-4" />
-                  {user?.email}
+              <div className="min-w-0 flex-1">
+                <h3 className="font-medium text-base md:text-lg truncate">{user?.user_metadata?.full_name || "User"}</h3>
+                <div className="flex items-center text-muted-foreground text-xs md:text-sm">
+                  <Mail className="mr-2 h-3 w-3 md:h-4 md:w-4 shrink-0" />
+                  <span className="truncate">{user?.email}</span>
                 </div>
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function SettingsPage() {
 
             <div className="space-y-1">
               <Label>User ID</Label>
-              <div className="text-sm text-muted-foreground font-mono bg-muted p-2 rounded">
+              <div className="text-xs md:text-sm text-muted-foreground font-mono bg-muted p-2 rounded break-all">
                 {user?.id}
               </div>
             </div>

@@ -72,12 +72,13 @@ export function CategoryList() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Categories</h2>
+      <div className="flex justify-between items-center gap-2">
+        <h2 className="text-xl md:text-2xl font-bold">Categories</h2>
         <CategoryFormModal 
           trigger={
-            <Button>
-              <Plus className="mr-2 h-4 w-4" /> New Category
+            <Button size="sm" className="md:h-10">
+              <Plus className="h-4 w-4 md:mr-2" />
+              <span className="hidden sm:inline">New Category</span>
             </Button>
           }
           onSuccess={fetchCategories}
@@ -86,7 +87,7 @@ export function CategoryList() {
 
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Expense Categories</h3>
+          <h3 className="text-base md:text-lg font-semibold mb-4 text-muted-foreground">Expense Categories</h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {expenseCategories.map((category) => {
               const Icon = getIconComponent(category.icon)
@@ -96,15 +97,15 @@ export function CategoryList() {
                     className="absolute left-0 top-0 bottom-0 w-1.5" 
                     style={{ backgroundColor: category.color }} 
                   />
-                  <CardContent className="p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3 pl-2">
+                  <CardContent className="p-3 md:p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2 md:gap-3 pl-1 md:pl-2 min-w-0 flex-1">
                       <div 
-                        className="h-10 w-10 rounded-full flex items-center justify-center bg-opacity-10"
+                        className="h-8 w-8 md:h-10 md:w-10 rounded-full flex items-center justify-center bg-opacity-10 shrink-0"
                         style={{ backgroundColor: `${category.color}20`, color: category.color }}
                       >
-                        <Icon className="h-5 w-5" />
+                        <Icon className="h-4 w-4 md:h-5 md:w-5" />
                       </div>
-                      <span className="font-medium">{category.name}</span>
+                      <span className="font-medium text-sm md:text-base truncate">{category.name}</span>
                     </div>
                     
                     {!category.is_default && (
@@ -141,7 +142,7 @@ export function CategoryList() {
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold mb-4 text-muted-foreground">Income Categories</h3>
+          <h3 className="text-base md:text-lg font-semibold mb-4 text-muted-foreground">Income Categories</h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {incomeCategories.map((category) => {
               const Icon = getIconComponent(category.icon)
@@ -151,15 +152,15 @@ export function CategoryList() {
                     className="absolute left-0 top-0 bottom-0 w-1.5" 
                     style={{ backgroundColor: category.color }} 
                   />
-                  <CardContent className="p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3 pl-2">
+                  <CardContent className="p-3 md:p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2 md:gap-3 pl-1 md:pl-2 min-w-0 flex-1">
                       <div 
-                        className="h-10 w-10 rounded-full flex items-center justify-center bg-opacity-10"
+                        className="h-8 w-8 md:h-10 md:w-10 rounded-full flex items-center justify-center bg-opacity-10 shrink-0"
                         style={{ backgroundColor: `${category.color}20`, color: category.color }}
                       >
-                        <Icon className="h-5 w-5" />
+                        <Icon className="h-4 w-4 md:h-5 md:w-5" />
                       </div>
-                      <span className="font-medium">{category.name}</span>
+                      <span className="font-medium text-sm md:text-base truncate">{category.name}</span>
                     </div>
                     
                     {!category.is_default && (

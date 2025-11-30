@@ -42,10 +42,10 @@ export default function DashboardPage() {
       animate="show"
       className="space-y-6"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back! Here's your financial overview.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Welcome back! Here's your financial overview.</p>
         </div>
       </div>
 
@@ -96,20 +96,20 @@ export default function DashboardPage() {
                 <p className="text-sm text-muted-foreground text-center py-4">No recent transactions</p>
               ) : (
                 transactions.map((t) => (
-                  <div key={t.id} className="flex items-center justify-between p-4 rounded-lg bg-card/50 hover:bg-card/80 transition-colors border border-border/50">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                        <Calendar className="h-5 w-5" />
+                  <div key={t.id} className="flex items-center justify-between p-3 md:p-4 rounded-lg bg-card/50 hover:bg-card/80 transition-colors border border-border/50">
+                    <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
+                      <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold shrink-0">
+                        <Calendar className="h-4 w-4 md:h-5 md:w-5" />
                       </div>
-                      <div className="space-y-1">
-                        <p className="font-medium leading-none">{t.category?.name || "Uncategorized"}</p>
-                        <p className="text-sm text-muted-foreground line-clamp-1">
+                      <div className="space-y-1 min-w-0 flex-1">
+                        <p className="font-medium leading-none text-sm md:text-base truncate">{t.category?.name || "Uncategorized"}</p>
+                        <p className="text-xs md:text-sm text-muted-foreground line-clamp-1">
                           {t.note || "No note"}
                         </p>
                       </div>
                     </div>
                     <div className={cn(
-                      "font-bold",
+                      "font-bold text-sm md:text-base whitespace-nowrap ml-2",
                       t.category?.type === 'income' ? "text-emerald-500" : "text-rose-500"
                     )}>
                       {t.category?.type === 'income' ? "+" : "-"}{formatCurrency(t.amount)}

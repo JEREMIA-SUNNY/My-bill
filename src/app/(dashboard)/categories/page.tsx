@@ -5,8 +5,8 @@ export default function CategoriesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
-          <p className="text-muted-foreground">Manage your expense and income categories.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Categories</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Manage your expense and income categories.</p>
         </div>
       </div>
       

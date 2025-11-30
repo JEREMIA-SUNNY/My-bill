@@ -109,15 +109,15 @@ export function PaymentMethodFormModal({
       description={paymentMethodToEdit ? "Update your payment method details." : "Add a new payment method for your transactions."}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-6 p-3 md:p-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel className="text-sm md:text-base">Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Credit Card, Cash" {...field} />
+                  <Input placeholder="e.g. Credit Card, Cash" className="text-sm md:text-base h-10 md:h-11" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -129,8 +129,8 @@ export function PaymentMethodFormModal({
             name="icon"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Icon</FormLabel>
-                <div className="grid grid-cols-6 gap-2 mt-2">
+                <FormLabel className="text-sm md:text-base">Icon</FormLabel>
+                <div className="grid grid-cols-5 md:grid-cols-6 gap-1.5 md:gap-2 mt-2">
                   {CATEGORY_ICONS.map((item) => {
                     const Icon = item.icon
                     const isSelected = field.value === item.name
@@ -138,12 +138,12 @@ export function PaymentMethodFormModal({
                       <div
                         key={item.name}
                         className={cn(
-                          "cursor-pointer rounded-md p-2 flex items-center justify-center border transition-all hover:bg-accent",
+                          "cursor-pointer rounded-md p-1.5 md:p-2 flex items-center justify-center border transition-all hover:bg-accent",
                           isSelected ? "border-primary bg-primary/10 text-primary" : "border-transparent"
                         )}
                         onClick={() => field.onChange(item.name)}
                       >
-                        <Icon className="h-5 w-5" />
+                        <Icon className="h-4 w-4 md:h-5 md:w-5" />
                       </div>
                     )
                   })}
@@ -153,7 +153,7 @@ export function PaymentMethodFormModal({
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full h-10 md:h-11 text-sm md:text-base" disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {paymentMethodToEdit ? "Update Method" : "Create Method"}
           </Button>
