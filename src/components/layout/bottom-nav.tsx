@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { LayoutDashboard, Receipt, PieChart, Settings, Plus, Wallet, Menu, CreditCard, LogOut, X } from "lucide-react"
+import { LayoutDashboard, Receipt, PieChart, Settings, Plus, Wallet, Menu, CreditCard, LogOut, X, Utensils } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { AddTransactionModal } from "@/components/features/add-transaction-modal"
@@ -67,6 +67,11 @@ const menuItems = [
     title: "Settings",
     href: "/settings",
     icon: Settings,
+  },
+  {
+    title: "Meal Plan",
+    href: "/meal-plan",
+    icon: Utensils,
   },
 ]
 

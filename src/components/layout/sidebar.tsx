@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { LayoutDashboard, Receipt, PieChart, Settings, Wallet, LogOut, User, CreditCard } from "lucide-react"
+import { LayoutDashboard, Receipt, PieChart, Settings, Wallet, LogOut, User, CreditCard, Utensils } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -45,6 +45,11 @@ const sidebarItems = [
     title: "Settings",
     href: "/settings",
     icon: Settings,
+  },
+  {
+    title: "Meal Plan",
+    href: "/meal-plan",
+    icon: Utensils,
   },
 ]
 
