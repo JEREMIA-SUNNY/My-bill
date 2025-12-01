@@ -162,7 +162,7 @@ export function CreateBudgetModal({ trigger, onSuccess }: CreateBudgetModalProps
                   <FormLabel className="text-sm md:text-base">Amount Limit</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-sm md:text-base text-muted-foreground">$</span>
+                      <span className="absolute left-3 top-2.5 text-sm md:text-base text-muted-foreground"></span>
                       <Input 
                         placeholder="0.00" 
                         className="pl-7 text-sm md:text-base h-10 md:h-11" 

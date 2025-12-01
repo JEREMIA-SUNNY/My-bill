@@ -36,6 +36,7 @@ import { toast } from "sonner"
 import { predictCategory } from "@/lib/smart-categorization"
 import { useReferenceData } from "@/hooks/use-reference-data"
 import { createClient } from "@/lib/supabase/client"
+import { getIconComponent } from "@/lib/constants"
 
 const formSchema = z.object({
   amount: z.string().min(1, "Amount is required"),
@@ -48,8 +49,21 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) {
-  const [open, setOpen] = useState(false)
+export function AddTransactionModal({ 
+  trigger, 
+  transactionToEdit,
+  open: controlledOpen,
+  onOpenChange: setControlledOpen
+}: { 
+  trigger?: React.ReactNode
+  transactionToEdit?: any
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}) {
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen
+  const setOpen = setControlledOpen || setInternalOpen
+
   const [type, setType] = useState<"expense" | "income">("expense")
   const [submitting, setSubmitting] = useState(false)
   
@@ -68,10 +82,31 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
     },
   })
 
-  // Smart Categorization
+  // Initialize form with transaction data when editing
+  useEffect(() => {
+    if (transactionToEdit) {
+      setType(transactionToEdit.type)
+      form.reset({
+        amount: transactionToEdit.amount.toString(),
+        date: new Date(transactionToEdit.date),
+        isRecurring: transactionToEdit.is_recurring || false,
+        note: transactionToEdit.note || "",
+        categoryId: transactionToEdit.category?.id || "", // Note: This assumes transactionToEdit has nested category object with id, or we need to handle flat structure
+        paymentMethodId: transactionToEdit.payment_method?.id || "",
+      })
+      
+      // If the transaction object structure from the list is different (e.g. joined tables), we might need to adjust.
+      // The Transaction type in list has category: { name, icon, color } but maybe not ID if it was a join without ID.
+      // Let's check the fetch query in TransactionsList.
+      // It selects: category:categories(name, icon, color). It DOES NOT select ID!
+      // This is a problem. We need the category ID to pre-fill the form.
+    }
+  }, [transactionToEdit, form])
+
+  // Smart Categorization (only for new transactions or when note changes)
   const noteValue = form.watch("note")
   useEffect(() => {
-    if (noteValue && categories.length > 0) {
+    if (!transactionToEdit && noteValue && categories.length > 0) {
       const predictedId = predictCategory(noteValue, categories)
       if (predictedId) {
         const currentCategory = form.getValues("categoryId")
@@ -81,7 +116,7 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
         }
       }
     }
-  }, [noteValue, categories, form])
+  }, [noteValue, categories, form, transactionToEdit])
 
   async function onSubmit(values: FormValues) {
     setSubmitting(true)
@@ -105,19 +140,32 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
           return
         }
 
-        const { error } = await supabase.from("expenses").insert({
-          user_id: user.id,
+        const transactionData = {
           amount: parseFloat(values.amount),
           category_id: values.categoryId,
           payment_method_id: values.paymentMethodId,
           date: format(values.date, "yyyy-MM-dd"),
           note: values.note || null,
           is_recurring: values.isRecurring || false,
-        })
-        if (error) throw error
+        }
+
+        if (transactionToEdit) {
+          const { error } = await supabase
+            .from("expenses")
+            .update(transactionData)
+            .eq("id", transactionToEdit.id)
+          if (error) throw error
+          toast.success("Expense updated successfully!")
+        } else {
+          const { error } = await supabase.from("expenses").insert({
+            user_id: user.id,
+            ...transactionData
+          })
+          if (error) throw error
+          toast.success("Expense added successfully!")
+        }
       } else {
         // For income
-        // We use the category name as the 'source' if available, otherwise the note
         let source = values.note || "Income"
         if (values.categoryId) {
           const category = categories.find(c => c.id === values.categoryId)
@@ -126,17 +174,30 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
           }
         }
 
-        const { error } = await supabase.from("incomes").insert({
-          user_id: user.id,
+        const transactionData = {
           amount: parseFloat(values.amount),
           source: source,
           date: format(values.date, "yyyy-MM-dd"),
           is_recurring: values.isRecurring || false,
-        })
-        if (error) throw error
+        }
+
+        if (transactionToEdit) {
+          const { error } = await supabase
+            .from("incomes")
+            .update(transactionData)
+            .eq("id", transactionToEdit.id)
+          if (error) throw error
+          toast.success("Income updated successfully!")
+        } else {
+          const { error } = await supabase.from("incomes").insert({
+            user_id: user.id,
+            ...transactionData
+          })
+          if (error) throw error
+          toast.success("Income added successfully!")
+        }
       }
 
-      toast.success(`${type === "expense" ? "Expense" : "Income"} added successfully!`)
       setOpen(false)
       form.reset()
       window.location.reload() 
@@ -153,8 +214,8 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
     <ResponsiveDialog
       open={open}
       onOpenChange={setOpen}
-      title={`Add ${type === "expense" ? "Expense" : "Income"}`}
-      description="Track your financial activity"
+      title={transactionToEdit ? "Edit Transaction" : `Add ${type === "expense" ? "Expense" : "Income"}`}
+      description={transactionToEdit ? "Update transaction details" : "Track your financial activity"}
       trigger={
         trigger || (
           <Button size="lg" className="rounded-full shadow-lg">
@@ -191,7 +252,7 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
                   <FormLabel className="text-sm md:text-base">Amount</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-sm md:text-base text-muted-foreground">$</span>
+                      <span className="absolute left-3 top-2.5 text-sm md:text-base text-muted-foreground"></span>
                       <Input 
                         placeholder="0.00" 
                         className="pl-7 text-base md:text-lg font-semibold h-10 md:h-11" 
@@ -225,14 +286,17 @@ export function AddTransactionModal({ trigger }: { trigger?: React.ReactNode }) 
                         ) : filteredCategories.length === 0 ? (
                            <div className="p-2 text-center text-xs text-muted-foreground">No categories found</div>
                         ) : (
-                          filteredCategories.map((category) => (
-                            <SelectItem key={category.id} value={category.id}>
-                              <span className="flex items-center gap-2">
-                                <span>{category.icon}</span>
-                                {category.name}
-                              </span>
-                            </SelectItem>
-                          ))
+                          filteredCategories.map((category) => {
+                            const Icon = getIconComponent(category.icon)
+                            return (
+                              <SelectItem key={category.id} value={category.id}>
+                                <span className="flex items-center gap-2">
+                                  <Icon className="h-4 w-4" style={{ color: category.color }} />
+                                  {category.name}
+                                </span>
+                              </SelectItem>
+                            )
+                          })
                         )}
                       </SelectContent>
                     </Select>

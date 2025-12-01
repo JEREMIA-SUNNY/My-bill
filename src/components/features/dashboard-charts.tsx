@@ -53,7 +53,7 @@ export function DashboardCharts({ transactions, summary, monthlyData, budgetData
                     fontSize={12} 
                     tickLine={false} 
                     axisLine={false} 
-                    tickFormatter={(value) => `$${value}`} 
+                    tickFormatter={(value) => `${value}`} 
                   />
                   <Tooltip 
                     contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}

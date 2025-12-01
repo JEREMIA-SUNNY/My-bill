@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { createClient } from "@/lib/supabase/client"
+import { LoadingSpinner } from "@/components/ui/loading"
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme()
@@ -40,7 +41,11 @@ export default function SettingsPage() {
     }
   }
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-[400px]">
+      <LoadingSpinner size="lg" />
+    </div>
+  )
 
   return (
     <div className="space-y-6">

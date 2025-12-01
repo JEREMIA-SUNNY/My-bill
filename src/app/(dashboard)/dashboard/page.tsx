@@ -8,6 +8,7 @@ import { AddTransactionModal } from "@/components/features/add-transaction-modal
 import { useDashboardData } from "@/hooks/use-dashboard-data"
 import { formatCurrency, cn } from "@/lib/utils"
 import { DashboardCharts } from "@/components/features/dashboard-charts"
+import { LoadingSpinner } from "@/components/ui/loading"
 
 export default function DashboardPage() {
   const { loading, transactions, summary, monthlyData, budgetData } = useDashboardData()
@@ -29,8 +30,8 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <LoadingSpinner size="xl" />
       </div>
     )
   }

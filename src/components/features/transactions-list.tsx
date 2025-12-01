@@ -41,6 +41,8 @@ import { createClient } from "@/lib/supabase/client"
 import { formatCurrency, cn } from "@/lib/utils"
 import { Database } from "@/types/database"
 import { getIconComponent } from "@/lib/constants"
+import { LoadingSpinner } from "@/components/ui/loading"
+import { AddTransactionModal } from "./add-transaction-modal"
 
 type Transaction = {
   id: string
@@ -48,9 +50,12 @@ type Transaction = {
   amount: number
   date: string
   note: string | null
-  category?: { name: string, icon: string, color: string } | null
+  category?: { id?: string, name: string, icon: string, color: string } | null
   source?: string | null
-  payment_method?: { name: string, icon: string } | null
+  payment_method?: { id?: string, name: string, icon: string } | null
+  is_recurring?: boolean
+  category_id?: string
+  payment_method_id?: string
 }
 
 export function TransactionsList() {
@@ -58,6 +63,10 @@ export function TransactionsList() {
   const [categories, setCategories] = useState<any[]>([])
   const [paymentMethods, setPaymentMethods] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  
+  // Edit State
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   
   // Filters
   const [searchTerm, setSearchTerm] = useState("")
@@ -96,9 +105,9 @@ export function TransactionsList() {
       let expensesQuery = supabase
         .from("expenses")
         .select(`
-          id, amount, date, note,
-          category:categories(name, icon, color),
-          payment_method:payment_methods(name, icon)
+          id, amount, date, note, category_id, payment_method_id, is_recurring,
+          category:categories(id, name, icon, color),
+          payment_method:payment_methods(id, name, icon)
         `)
         .eq("user_id", user.id)
 
@@ -114,7 +123,7 @@ export function TransactionsList() {
       // Fetch Incomes
       let incomesQuery = supabase
         .from("incomes")
-        .select("id, amount, date, source")
+        .select("id, amount, date, source, is_recurring")
         .eq("user_id", user.id)
 
       if (dateRange.from) {
@@ -164,6 +173,11 @@ export function TransactionsList() {
     }
   }
 
+  function handleEdit(transaction: Transaction) {
+    setEditingTransaction(transaction)
+    setIsEditModalOpen(true)
+  }
+
   const filteredTransactions = transactions.filter(t => {
     const matchesSearch = (t.note || t.source || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
                           (t.category?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
@@ -190,7 +204,11 @@ export function TransactionsList() {
   }
 
   if (loading) {
-    return <div className="text-center py-8">Loading transactions...</div>
+    return (
+      <div className="flex items-center justify-center min-h-[300px]">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
   }
 
   return (
@@ -383,6 +401,9 @@ export function TransactionsList() {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => handleEdit(transaction)}>
+                              <Edit className="mr-2 h-4 w-4" /> Edit
+                            </DropdownMenuItem>
                             <DropdownMenuItem 
                               className="text-destructive focus:text-destructive"
                               onClick={() => handleDelete(transaction.id, transaction.type)}
@@ -404,6 +425,12 @@ export function TransactionsList() {
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <p>Showing {filteredTransactions.length} transactions</p>
       </div>
+
+      <AddTransactionModal 
+        open={isEditModalOpen} 
+        onOpenChange={setIsEditModalOpen}
+        transactionToEdit={editingTransaction}
+      />
     </div>
   )
 }

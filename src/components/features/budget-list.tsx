@@ -13,6 +13,7 @@ import { Database } from "@/types/database"
 import { CreateBudgetModal } from "./create-budget-modal"
 import { formatCurrency, cn } from "@/lib/utils"
 import { getIconComponent } from "@/lib/constants"
+import { LoadingSpinner } from "@/components/ui/loading"
 
 type BudgetWithCategory = Database["public"]["Tables"]["budgets"]["Row"] & {
   category: Database["public"]["Tables"]["categories"]["Row"] | null
@@ -83,7 +84,11 @@ export function BudgetList() {
   }, [])
 
   if (loading) {
-    return <div className="text-center py-8">Loading budgets...</div>
+    return (
+      <div className="flex items-center justify-center min-h-[300px]">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
   }
 
   return (

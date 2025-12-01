@@ -6,18 +6,31 @@ import {
   PieChart, Pie, Cell
 } from "recharts"
 import { format, subMonths, startOfMonth } from "date-fns"
-import { Loader2 } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { createClient } from "@/lib/supabase/client"
 import { formatCurrency } from "@/lib/utils"
 import { CalendarView } from "@/components/features/calendar-view"
+import { LoadingSpinner } from "@/components/ui/loading"
+import { TextAnalyticsView } from "@/components/features/text-analytics-view"
+import { generatePDFReport } from "@/lib/pdf-generator"
+import { Download } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { isWithinInterval, endOfMonth } from "date-fns"
 
 export function AnalyticsView() {
   const [loading, setLoading] = useState(true)
   const [monthlyData, setMonthlyData] = useState<any[]>([])
   const [categoryData, setCategoryData] = useState<any[]>([])
+  const [rawExpenses, setRawExpenses] = useState<any[]>([])
+  const [rawIncomes, setRawIncomes] = useState<any[]>([])
   const supabase = createClient()
 
   useEffect(() => {
@@ -33,20 +46,23 @@ export function AnalyticsView() {
         
         const { data: expenses, error: expensesError } = await supabase
           .from("expenses")
-          .select("amount, date, category:categories(name, color)")
+          .select("amount, date, note, category:categories(name, color)")
           .eq("user_id", user.id)
           .gte("date", startDate)
           .order("date", { ascending: true })
 
         const { data: incomes, error: incomesError } = await supabase
           .from("incomes")
-          .select("amount, date")
+          .select("amount, date, source")
           .eq("user_id", user.id)
           .gte("date", startDate)
           .order("date", { ascending: true })
 
         if (expensesError) throw expensesError
         if (incomesError) throw incomesError
+
+        setRawExpenses(expenses || [])
+        setRawIncomes(incomes || [])
 
         // Process Monthly Data
         const monthsMap: Record<string, { name: string, income: number, expense: number }> = {}
@@ -112,17 +128,79 @@ export function AnalyticsView() {
     fetchData()
   }, [])
 
+  function handleDownload(period: 'current' | 'last' | 'last3') {
+    const today = new Date()
+    let start: Date
+    let end: Date
+    let title: string
+
+    switch (period) {
+      case 'current':
+        start = startOfMonth(today)
+        end = endOfMonth(today)
+        title = format(today, "MMMM yyyy")
+        break
+      case 'last':
+        start = startOfMonth(subMonths(today, 1))
+        end = endOfMonth(subMonths(today, 1))
+        title = format(subMonths(today, 1), "MMMM yyyy")
+        break
+      case 'last3':
+        start = startOfMonth(subMonths(today, 2))
+        end = endOfMonth(today)
+        title = `Last 3 Months (${format(start, "MMM")} - ${format(end, "MMM yyyy")})`
+        break
+    }
+
+    const filteredExpenses = rawExpenses.filter(e => 
+      isWithinInterval(new Date(e.date), { start, end })
+    )
+    const filteredIncomes = rawIncomes.filter(i => 
+      isWithinInterval(new Date(i.date), { start, end })
+    )
+
+    generatePDFReport(filteredExpenses, filteredIncomes, title)
+  }
+
   if (loading) {
-    return <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin" /></div>
+    return (
+      <div className="flex items-center justify-center min-h-[300px]">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
   }
 
   return (
     <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <h2 className="text-2xl font-bold tracking-tight">Analytics Dashboard</h2>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-full md:w-auto">
+              <Download className="mr-2 h-4 w-4" />
+              Download Report
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => handleDownload('current')}>
+              This Month
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDownload('last')}>
+              Last Month
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDownload('last3')}>
+              Last 3 Months
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview" className="text-xs md:text-sm">Overview</TabsTrigger>
           <TabsTrigger value="categories" className="text-xs md:text-sm">Categories</TabsTrigger>
           <TabsTrigger value="calendar" className="text-xs md:text-sm">Calendar</TabsTrigger>
+          <TabsTrigger value="text" className="text-xs md:text-sm">Insights</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -147,7 +225,7 @@ export function AnalyticsView() {
                       fontSize={12} 
                       tickLine={false} 
                       axisLine={false} 
-                      tickFormatter={(value) => `₹${value}`} 
+                      tickFormatter={(value) => `${value}`} 
                     />
                     <Tooltip 
                       cursor={{ fill: 'rgba(255,255,255,0.05)' }}
@@ -223,6 +301,10 @@ export function AnalyticsView() {
 
         <TabsContent value="calendar" className="space-y-4">
           <CalendarView />
+        </TabsContent>
+
+        <TabsContent value="text" className="space-y-4">
+          <TextAnalyticsView expenses={rawExpenses} incomes={rawIncomes} />
         </TabsContent>
       </Tabs>
     </div>

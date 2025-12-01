@@ -15,7 +15,7 @@ export default function TransactionsPage() {
         </div>
         <AddTransactionModal 
           trigger={
-            <Button size="lg" className="gap-2 md:block hidden">
+            <Button size="lg" className="gap-2 md:flex hidden">
               <Plus className="h-4 w-4" />
               Add Transaction
             </Button>

@@ -16,6 +16,7 @@ import { createClient } from "@/lib/supabase/client"
 import { Database } from "@/types/database"
 import { CategoryFormModal } from "./category-form-modal"
 import { getIconComponent } from "@/lib/constants"
+import { LoadingSpinner } from "@/components/ui/loading"
 
 type Category = Database["public"]["Tables"]["categories"]["Row"]
 
@@ -64,7 +65,11 @@ export function CategoryList() {
   }
 
   if (loading) {
-    return <div className="text-center py-8">Loading categories...</div>
+    return (
+      <div className="flex items-center justify-center min-h-[300px]">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
   }
 
   const expenseCategories = categories.filter(c => c.type === "expense")
